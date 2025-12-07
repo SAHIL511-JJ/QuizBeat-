@@ -1,12 +1,14 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useGame } from '../contexts/GameContext';
+import { useAuth } from '../contexts/AuthContext';
 import { Clock, CheckCircle } from 'lucide-react';
 
 export default function GamePlay() {
     const { gameId } = useParams();
     const navigate = useNavigate();
-    const { subscribeToGame, submitAnswer, nextQuestion, calculateScore, currentGame } = useGame();
+    const { user } = useAuth();
+    const { subscribeToGame, submitAnswer, currentGame } = useGame();
     const [game, setGame] = useState(null);
     const [timeLeft, setTimeLeft] = useState(0);
     const [selectedAnswer, setSelectedAnswer] = useState(null);
@@ -15,11 +17,16 @@ export default function GamePlay() {
     const [questionStartTime, setQuestionStartTime] = useState(null);
 
     const teamName = currentGame?.teamName;
-    const isHost = currentGame?.hostId === currentGame?.userId;
 
     useEffect(() => {
         const unsubscribe = subscribeToGame(gameId, (gameData) => {
             setGame(gameData);
+
+            // Redirect host to host view
+            if (user && gameData.hostId === user.uid) {
+                navigate(`/game/${gameId}/host`);
+                return;
+            }
 
             if (gameData.status === 'finished') {
                 navigate(`/game/${gameId}/results`);
@@ -41,7 +48,7 @@ export default function GamePlay() {
                 unsubscribe();
             }
         };
-    }, [gameId, navigate, subscribeToGame, questionStartTime]);
+    }, [gameId, navigate, subscribeToGame, questionStartTime, user]);
 
     // Timer countdown
     useEffect(() => {
@@ -54,23 +61,12 @@ export default function GamePlay() {
 
             if (remaining === 0 && !showResults) {
                 setShowResults(true);
-                // Auto advance after showing results (host only)
-                if (isHost) {
-                    setTimeout(() => {
-                        const nextIndex = game.currentQuestion + 1;
-                        if (nextIndex >= game.quiz.questions.length) {
-                            // End game
-                            navigate(`/game/${gameId}/results`);
-                        } else {
-                            nextQuestion(gameId, nextIndex);
-                        }
-                    }, 3000);
-                }
+                // No auto-advance - host controls the flow
             }
         }, 100);
 
         return () => clearInterval(timer);
-    }, [game, showResults, isHost, gameId, navigate, nextQuestion]);
+    }, [game, showResults]);
 
     const handleAnswerSelect = async (answerIndex) => {
         if (hasAnswered || showResults || !teamName) return;

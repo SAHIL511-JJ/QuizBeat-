@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import {
@@ -7,11 +8,31 @@ import {
     History,
     BookOpen,
     ArrowRight,
-    Sparkles
+    Sparkles,
+    Trash2,
+    FileText
 } from 'lucide-react';
 
 export default function Dashboard() {
     const { user } = useAuth();
+    const [textbooks, setTextbooks] = useState([]);
+
+    useEffect(() => {
+        loadTextbooks();
+    }, []);
+
+    const loadTextbooks = () => {
+        const stored = JSON.parse(localStorage.getItem('textbooks') || '[]');
+        setTextbooks(stored);
+    };
+
+    const handleDeleteTextbook = (textbookId) => {
+        if (!confirm('Are you sure you want to delete this textbook?')) return;
+
+        const updated = textbooks.filter(t => t.id !== textbookId);
+        localStorage.setItem('textbooks', JSON.stringify(updated));
+        setTextbooks(updated);
+    };
 
     const actions = [
         {
@@ -91,14 +112,40 @@ export default function Dashboard() {
                 <section className="my-textbooks">
                     <h2>
                         <BookOpen size={20} />
-                        My Textbooks
+                        My Textbooks ({textbooks.length})
                     </h2>
                     <div className="textbook-list">
-                        <div className="empty-state">
-                            <Upload size={48} />
-                            <p>No textbooks uploaded</p>
-                            <Link to="/upload" className="btn-link">Upload your first textbook</Link>
-                        </div>
+                        {textbooks.length === 0 ? (
+                            <div className="empty-state">
+                                <Upload size={48} />
+                                <p>No textbooks uploaded</p>
+                                <Link to="/upload" className="btn-link">Upload your first textbook</Link>
+                            </div>
+                        ) : (
+                            <div className="textbooks-items">
+                                {textbooks.map((textbook) => (
+                                    <div key={textbook.id} className="textbook-item">
+                                        <div className="textbook-icon">
+                                            <FileText size={24} />
+                                        </div>
+                                        <div className="textbook-info">
+                                            <span className="textbook-name">{textbook.filename}</span>
+                                            <span className="textbook-meta">
+                                                {textbook.chapters?.length || 0} chapters •
+                                                {new Date(textbook.uploadedAt).toLocaleDateString()}
+                                            </span>
+                                        </div>
+                                        <button
+                                            className="delete-textbook-btn"
+                                            onClick={() => handleDeleteTextbook(textbook.id)}
+                                            title="Delete textbook"
+                                        >
+                                            <Trash2 size={18} />
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                     </div>
                 </section>
             </div>

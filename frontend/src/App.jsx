@@ -15,6 +15,7 @@ import HostGame from './pages/HostGame';
 import JoinGame from './pages/JoinGame';
 import GameLobby from './pages/GameLobby';
 import GamePlay from './pages/GamePlay';
+import HostGamePlay from './pages/HostGamePlay';
 import GameResults from './pages/GameResults';
 
 import './index.css';
@@ -33,6 +34,7 @@ function App() {
                 <Route path="/join-game" element={<JoinGame />} />
                 <Route path="/game/:gameId/lobby" element={<GameLobby />} />
                 <Route path="/game/:gameId/play" element={<GamePlay />} />
+                <Route path="/game/:gameId/host" element={<HostGamePlay />} />
                 <Route path="/game/:gameId/results" element={<GameResults />} />
 
                 {/* Protected Routes */}
