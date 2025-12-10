@@ -14,6 +14,7 @@ export default function HostGamePlay() {
     const [showResults, setShowResults] = useState(false);
     const [previousRankings, setPreviousRankings] = useState([]);
     const [currentRankings, setCurrentRankings] = useState([]);
+    const [displayRankings, setDisplayRankings] = useState([]); // What to show before time up
     const [pointsAdded, setPointsAdded] = useState({});
     const [questionStartTime, setQuestionStartTime] = useState(null);
 
@@ -38,6 +39,7 @@ export default function HostGamePlay() {
                 // Save current rankings as previous before resetting
                 if (currentRankings.length > 0) {
                     setPreviousRankings(currentRankings);
+                    setDisplayRankings(currentRankings); // Freeze display at start of question
                 }
                 setQuestionStartTime(gameData.questionStartTime);
                 setShowResults(false);
@@ -92,8 +94,9 @@ export default function HostGamePlay() {
         rankings.sort((a, b) => b.score - a.score);
         setCurrentRankings(rankings);
 
-        // Update points added for animation
+        // Update points added for animation and update display rankings when time is up
         if (showResults) {
+            setDisplayRankings(rankings); // Now show updated scores
             const newPointsAdded = {};
             rankings.forEach(team => {
                 newPointsAdded[team.id] = team.pointsThisQuestion;
@@ -151,6 +154,9 @@ export default function HostGamePlay() {
     const timerPercent = (timeLeft / game.quiz.timePerQuestion) * 100;
     const answeredCount = currentRankings.filter(t => t.hasAnswered).length;
     const totalTeams = currentRankings.length;
+    // Use displayRankings for showing scores (frozen until time up)
+    // but use currentRankings for hasAnswered status (real-time)
+    const rankingsToShow = displayRankings.length > 0 ? displayRankings : currentRankings;
 
     return (
         <div className="host-gameplay-page">
@@ -228,9 +234,12 @@ export default function HostGamePlay() {
                 </div>
 
                 <div className="live-leaderboard">
-                    {currentRankings.map((team, index) => {
+                    {rankingsToShow.map((team, index) => {
                         const rankChange = showResults ? getRankChange(team.id) : 0;
                         const pointsGained = showResults ? (pointsAdded[team.id] || 0) : 0;
+                        // Get real-time answered status from currentRankings
+                        const currentTeamData = currentRankings.find(t => t.id === team.id);
+                        const hasAnswered = currentTeamData?.hasAnswered || false;
 
                         return (
                             <div
@@ -276,8 +285,8 @@ export default function HostGamePlay() {
 
                                 {/* Answer Status */}
                                 {!showResults && (
-                                    <div className={`answer-indicator ${team.hasAnswered ? 'answered' : ''}`}>
-                                        {team.hasAnswered ? '✓' : '...'}
+                                    <div className={`answer-indicator ${hasAnswered ? 'answered' : ''}`}>
+                                        {hasAnswered ? '✓' : '...'}
                                     </div>
                                 )}
                             </div>

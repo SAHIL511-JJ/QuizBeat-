@@ -2983,22 +2983,26 @@ input {
 }
 
 .question-panel .timer-bar {
-  height: 12px;
-  background: var(--bg-card);
-  border-radius: 6px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
   overflow: hidden;
   position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
 .question-panel .timer-fill {
   height: 100%;
   background: linear-gradient(90deg, var(--primary), var(--secondary));
   transition: width 0.1s linear;
-  border-radius: 6px;
+  border-radius: 10px;
+  box-shadow: 0 0 15px var(--primary);
 }
 
 .question-panel .timer-fill.warning {
   background: linear-gradient(90deg, var(--error), var(--warning));
+  box-shadow: 0 0 15px var(--error);
 }
 
 .question-panel .timer-text {
