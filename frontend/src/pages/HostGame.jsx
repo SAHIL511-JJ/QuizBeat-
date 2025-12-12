@@ -289,7 +289,7 @@ export default function HostGame() {
                                 <input
                                     type="range"
                                     min="5"
-                                    max="20"
+                                    max="50"
                                     value={numQuestions}
                                     onChange={(e) => setNumQuestions(parseInt(e.target.value))}
                                     className="range-slider"
@@ -316,110 +316,110 @@ export default function HostGame() {
                             </button>
                         </>
                     )}
-
-                    {/* Quiz Editor */}
-                    {showQuizEditor && (
-                        <div className="quiz-editor">
-                            <div className="editor-header">
-                                <h3>
-                                    <Edit3 size={20} />
-                                    {quizMode === 'ai' ? 'Edit Generated Quiz' : 'Create Your Quiz'}
-                                </h3>
-                                <span className="question-count">{customQuestions.length} questions</span>
-                            </div>
-
-                            <div className="questions-list">
-                                {customQuestions.map((q, qIndex) => (
-                                    <div key={qIndex} className="question-editor-card">
-                                        <div className="question-header">
-                                            <span className="q-number">Q{qIndex + 1}</span>
-                                            <button
-                                                className="delete-q-btn"
-                                                onClick={() => removeQuestion(qIndex)}
-                                                title="Delete question"
-                                            >
-                                                <Trash2 size={16} />
-                                            </button>
-                                        </div>
-
-                                        <textarea
-                                            className="question-input"
-                                            placeholder="Enter your question..."
-                                            value={q.question}
-                                            onChange={(e) => updateQuestion(qIndex, 'question', e.target.value)}
-                                            rows={2}
-                                        />
-
-                                        <div className="options-editor">
-                                            {q.options.map((opt, optIndex) => (
-                                                <div key={optIndex} className="option-row">
-                                                    <button
-                                                        className={`correct-toggle ${q.correct === optIndex ? 'is-correct' : ''}`}
-                                                        onClick={() => updateQuestion(qIndex, 'correct', optIndex)}
-                                                        title={q.correct === optIndex ? 'Correct answer' : 'Set as correct'}
-                                                    >
-                                                        {q.correct === optIndex ? <Check size={16} /> : <span>{optIndex + 1}</span>}
-                                                    </button>
-                                                    <input
-                                                        type="text"
-                                                        className="option-input"
-                                                        placeholder={`Option ${optIndex + 1}`}
-                                                        value={opt}
-                                                        onChange={(e) => updateQuestion(qIndex, `option${optIndex}`, e.target.value)}
-                                                    />
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-
-                            <button className="add-question-btn" onClick={addQuestion}>
-                                <Plus size={20} />
-                                Add Question
-                            </button>
-                        </div>
-                    )}
-
-                    {/* Time per Question */}
-                    <div className="form-section">
-                        <label>
-                            <Clock size={16} />
-                            Time per Question: {timePerQuestion}s
-                        </label>
-                        <input
-                            type="range"
-                            min="10"
-                            max="30"
-                            value={timePerQuestion}
-                            onChange={(e) => setTimePerQuestion(parseInt(e.target.value))}
-                            className="range-slider"
-                        />
-                    </div>
-
-                    {error && <div className="error-message">{error}</div>}
-
-                    {/* Create Button */}
-                    {showQuizEditor && (
-                        <button
-                            className="create-game-btn"
-                            onClick={handleCreateGame}
-                            disabled={creating}
-                        >
-                            {creating ? (
-                                <>
-                                    <Loader className="spinner" size={20} />
-                                    Creating Game...
-                                </>
-                            ) : (
-                                <>
-                                    <GamepadIcon size={20} />
-                                    Create Game
-                                </>
-                            )}
-                        </button>
-                    )}
                 </div>
+
+                {/* Quiz Editor */}
+                {showQuizEditor && (
+                    <div className="quiz-editor">
+                        <div className="editor-header">
+                            <h3>
+                                <Edit3 size={20} />
+                                {quizMode === 'ai' ? 'Edit Generated Quiz' : 'Create Your Quiz'}
+                            </h3>
+                            <span className="question-count">{customQuestions.length} questions</span>
+                        </div>
+
+                        <div className="questions-list">
+                            {customQuestions.map((q, qIndex) => (
+                                <div key={qIndex} className="question-editor-card">
+                                    <div className="question-header">
+                                        <span className="q-number">Q{qIndex + 1}</span>
+                                        <button
+                                            className="delete-q-btn"
+                                            onClick={() => removeQuestion(qIndex)}
+                                            title="Delete question"
+                                        >
+                                            <Trash2 size={16} />
+                                        </button>
+                                    </div>
+
+                                    <textarea
+                                        className="question-input"
+                                        placeholder="Enter your question..."
+                                        value={q.question}
+                                        onChange={(e) => updateQuestion(qIndex, 'question', e.target.value)}
+                                        rows={2}
+                                    />
+
+                                    <div className="options-editor">
+                                        {q.options.map((opt, optIndex) => (
+                                            <div key={optIndex} className="option-row">
+                                                <button
+                                                    className={`correct-toggle ${q.correct === optIndex ? 'is-correct' : ''}`}
+                                                    onClick={() => updateQuestion(qIndex, 'correct', optIndex)}
+                                                    title={q.correct === optIndex ? 'Correct answer' : 'Set as correct'}
+                                                >
+                                                    {q.correct === optIndex ? <Check size={16} /> : <span>{optIndex + 1}</span>}
+                                                </button>
+                                                <input
+                                                    type="text"
+                                                    className="option-input"
+                                                    placeholder={`Option ${optIndex + 1}`}
+                                                    value={opt}
+                                                    onChange={(e) => updateQuestion(qIndex, `option${optIndex}`, e.target.value)}
+                                                />
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+
+                        <button className="add-question-btn" onClick={addQuestion}>
+                            <Plus size={20} />
+                            Add Question
+                        </button>
+                    </div>
+                )}
+
+                {/* Time per Question */}
+                <div className="form-section">
+                    <label>
+                        <Clock size={16} />
+                        Time per Question: {timePerQuestion}s
+                    </label>
+                    <input
+                        type="range"
+                        min="10"
+                        max="60"
+                        value={timePerQuestion}
+                        onChange={(e) => setTimePerQuestion(parseInt(e.target.value))}
+                        className="range-slider"
+                    />
+                </div>
+
+                {error && <div className="error-message">{error}</div>}
+
+                {/* Create Button */}
+                {showQuizEditor && (
+                    <button
+                        className="create-game-btn"
+                        onClick={handleCreateGame}
+                        disabled={creating}
+                    >
+                        {creating ? (
+                            <>
+                                <Loader className="spinner" size={20} />
+                                Creating Game...
+                            </>
+                        ) : (
+                            <>
+                                <GamepadIcon size={20} />
+                                Create Game
+                            </>
+                        )}
+                    </button>
+                )}
             </div>
         </div>
     );

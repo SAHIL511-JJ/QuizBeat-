@@ -156,7 +156,10 @@ export default function HostGamePlay() {
     const totalTeams = currentRankings.length;
     // Use displayRankings for showing scores (frozen until time up)
     // but use currentRankings for hasAnswered status (real-time)
-    const rankingsToShow = displayRankings.length > 0 ? displayRankings : currentRankings;
+    // When showResults is true, use currentRankings to show updated scores
+    const rankingsToShow = showResults
+        ? currentRankings
+        : (displayRankings.length > 0 ? displayRankings : currentRankings.map(t => ({ ...t, score: 0 })));
 
     return (
         <div className="host-gameplay-page">
@@ -250,7 +253,12 @@ export default function HostGamePlay() {
 
                                 <div className="team-info">
                                     <span className="team-name">{team.name}</span>
-                                    <span className="team-score">{team.score.toLocaleString()} pts</span>
+                                    <span className="team-score">
+                                        {showResults
+                                            ? currentRankings.find(t => t.id === team.id)?.score.toLocaleString() || team.score.toLocaleString()
+                                            : team.score.toLocaleString()
+                                        } pts
+                                    </span>
                                 </div>
 
                                 {/* Rank Change Indicator */}

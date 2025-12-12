@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import { GameProvider } from './contexts/GameContext';
+import { ThemeProvider } from './contexts/ThemeContext';
 import ProtectedRoute from './components/Auth/ProtectedRoute';
 import Navbar from './components/UI/Navbar';
 
@@ -22,61 +23,63 @@ import './index.css';
 
 function App() {
   return (
-    <Router>
-      <AuthProvider>
-        <GameProvider>
-          <div className="app">
-            <Navbar />
-            <main className="main-content">
-              <Routes>
-                {/* Public Routes */}
-                <Route path="/login" element={<Login />} />
-                <Route path="/join-game" element={<JoinGame />} />
-                <Route path="/game/:gameId/lobby" element={<GameLobby />} />
-                <Route path="/game/:gameId/play" element={<GamePlay />} />
-                <Route path="/game/:gameId/host" element={<HostGamePlay />} />
-                <Route path="/game/:gameId/results" element={<GameResults />} />
+    <ThemeProvider>
+      <Router>
+        <AuthProvider>
+          <GameProvider>
+            <div className="app">
+              <Navbar />
+              <main className="main-content">
+                <Routes>
+                  {/* Public Routes */}
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/join-game" element={<JoinGame />} />
+                  <Route path="/game/:gameId/lobby" element={<GameLobby />} />
+                  <Route path="/game/:gameId/play" element={<GamePlay />} />
+                  <Route path="/game/:gameId/host" element={<HostGamePlay />} />
+                  <Route path="/game/:gameId/results" element={<GameResults />} />
 
-                {/* Protected Routes */}
-                <Route path="/dashboard" element={
-                  <ProtectedRoute>
-                    <Dashboard />
-                  </ProtectedRoute>
-                } />
-                <Route path="/upload" element={
-                  <ProtectedRoute>
-                    <UploadTextbook />
-                  </ProtectedRoute>
-                } />
-                <Route path="/generate-quiz" element={
-                  <ProtectedRoute>
-                    <GenerateQuiz />
-                  </ProtectedRoute>
-                } />
-                <Route path="/take-quiz/:quizId" element={
-                  <ProtectedRoute>
-                    <TakeQuiz />
-                  </ProtectedRoute>
-                } />
-                <Route path="/quiz-results/:quizId" element={
-                  <ProtectedRoute>
-                    <QuizResults />
-                  </ProtectedRoute>
-                } />
-                <Route path="/host-game" element={
-                  <ProtectedRoute>
-                    <HostGame />
-                  </ProtectedRoute>
-                } />
+                  {/* Protected Routes */}
+                  <Route path="/dashboard" element={
+                    <ProtectedRoute>
+                      <Dashboard />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/upload" element={
+                    <ProtectedRoute>
+                      <UploadTextbook />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/generate-quiz" element={
+                    <ProtectedRoute>
+                      <GenerateQuiz />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/take-quiz/:quizId" element={
+                    <ProtectedRoute>
+                      <TakeQuiz />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/quiz-results/:quizId" element={
+                    <ProtectedRoute>
+                      <QuizResults />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/host-game" element={
+                    <ProtectedRoute>
+                      <HostGame />
+                    </ProtectedRoute>
+                  } />
 
-                {/* Default Route */}
-                <Route path="/" element={<Navigate to="/dashboard" replace />} />
-              </Routes>
-            </main>
-          </div>
-        </GameProvider>
-      </AuthProvider>
-    </Router>
+                  {/* Default Route */}
+                  <Route path="/" element={<Navigate to="/dashboard" replace />} />
+                </Routes>
+              </main>
+            </div>
+          </GameProvider>
+        </AuthProvider>
+      </Router>
+    </ThemeProvider>
   );
 }
 
