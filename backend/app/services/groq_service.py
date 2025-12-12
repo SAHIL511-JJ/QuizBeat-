@@ -78,6 +78,7 @@ INSTRUCTIONS:
 3. Questions should cover different aspects of the content
 4. Questions should be clear and unambiguous
 5. All options should be plausible
+6. IMPORTANT: Keep options SHORT (1-4 words max). No full sentences as options.
 
 OUTPUT FORMAT (JSON array only, no other text):
 [
