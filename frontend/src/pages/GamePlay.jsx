@@ -98,16 +98,10 @@ export default function GamePlay() {
 
     return (
         <div className="game-play-page">
-            {/* Timer Bar */}
-            <div className="timer-bar">
-                <div
-                    className={`timer-fill ${timeLeft <= 5 ? 'warning' : ''}`}
-                    style={{ width: `${timerPercent}%` }}
-                ></div>
-                <span className="timer-text">
-                    <Clock size={16} />
-                    {timeLeft}s
-                </span>
+            {/* Timer Badge */}
+            <div className={`timer-badge ${timeLeft <= 5 ? 'warning' : ''}`}>
+                <Clock size={18} />
+                <span>{timeLeft}s</span>
             </div>
 
             {/* Question Counter */}
