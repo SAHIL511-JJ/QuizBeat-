@@ -1051,6 +1051,7 @@ input {
   background: var(--bg-darker);
   border-radius: 4px;
   -webkit-appearance: none;
+  appearance: none;
   cursor: pointer;
 }
 
