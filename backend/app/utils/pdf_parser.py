@@ -61,14 +61,14 @@ def detect_chapters(text: str) -> List[Dict[str, str]]:
     """
     chapters = []
     
-    # Common chapter patterns
+    # Common chapter patterns (supports : - – — as separators)
     patterns = [
-        r'(?:^|\n)(Chapter\s+\d+[:\s]+[^\n]+)',
-        r'(?:^|\n)(CHAPTER\s+\d+[:\s]+[^\n]+)',
-        r'(?:^|\n)(Unit\s+\d+[:\s]+[^\n]+)',
-        r'(?:^|\n)(UNIT\s+\d+[:\s]+[^\n]+)',
-        r'(?:^|\n)(Module\s+\d+[:\s]+[^\n]+)',
-        r'(?:^|\n)(Part\s+\d+[:\s]+[^\n]+)',
+        r'(?:^|\n)(Chapter\s+\d+[\s:–—-]+[^\n]+)',
+        r'(?:^|\n)(CHAPTER\s+\d+[\s:–—-]+[^\n]+)',
+        r'(?:^|\n)(Unit\s+\d+[\s:–—-]+[^\n]+)',
+        r'(?:^|\n)(UNIT\s+\d+[\s:–—-]+[^\n]+)',
+        r'(?:^|\n)(Module\s+\d+[\s:–—-]+[^\n]+)',
+        r'(?:^|\n)(Part\s+\d+[\s:–—-]+[^\n]+)',
         r'(?:^|\n)(\d+\.\s+[A-Z][^\n]+)',  # 1. Section Title
     ]
     
