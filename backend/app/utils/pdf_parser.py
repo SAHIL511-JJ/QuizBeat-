@@ -62,21 +62,38 @@ def detect_chapters(text: str) -> List[Dict[str, str]]:
     chapters = []
     
     # Common chapter patterns (supports : - – — as separators)
+    # Supports: numeric, spelled-out (One-Twelve), Roman numerals (I-XII), subsections
     patterns = [
+        # Numeric chapters: Chapter 1, CHAPTER 2
         r'(?:^|\n)(Chapter\s+\d+[\s:–—-]+[^\n]+)',
         r'(?:^|\n)(CHAPTER\s+\d+[\s:–—-]+[^\n]+)',
+        
+        # Spelled-out chapters: Chapter One, Chapter Two, etc.
+        r'(?:^|\n)(Chapter\s+(?:One|Two|Three|Four|Five|Six|Seven|Eight|Nine|Ten|Eleven|Twelve)[\s:–—-]+[^\n]+)',
+        r'(?:^|\n)(CHAPTER\s+(?:ONE|TWO|THREE|FOUR|FIVE|SIX|SEVEN|EIGHT|NINE|TEN|ELEVEN|TWELVE)[\s:–—-]+[^\n]+)',
+        
+        # Roman numerals: Chapter I, Chapter II, etc.
+        r'(?:^|\n)(Chapter\s+(?:I{1,3}|IV|V|VI{0,3}|IX|X|XI{0,3}|XII)[\s:–—-]+[^\n]+)',
+        r'(?:^|\n)(CHAPTER\s+(?:I{1,3}|IV|V|VI{0,3}|IX|X|XI{0,3}|XII)[\s:–—-]+[^\n]+)',
+        
+        # Units, Modules, Parts
         r'(?:^|\n)(Unit\s+\d+[\s:–—-]+[^\n]+)',
         r'(?:^|\n)(UNIT\s+\d+[\s:–—-]+[^\n]+)',
         r'(?:^|\n)(Module\s+\d+[\s:–—-]+[^\n]+)',
         r'(?:^|\n)(Part\s+\d+[\s:–—-]+[^\n]+)',
-        r'(?:^|\n)(\d+\.\s+[A-Z][^\n]+)',  # 1. Section Title
+        
+        # Numbered sections: 1. Title
+        r'(?:^|\n)(\d+\.\s+[A-Z][^\n]+)',
+        
+        # Subsections: 1.1 Title, 2.3 Title
+        r'(?:^|\n)(\d+\.\d+\s+[A-Z][^\n]+)',
     ]
     
     # Find all chapter headings with positions
     chapter_positions = []
     
     for pattern in patterns:
-        for match in re.finditer(pattern, text, re.MULTILINE):
+        for match in re.finditer(pattern, text, re.MULTILINE | re.IGNORECASE):
             title = match.group(1).strip()
             position = match.start()
             chapter_positions.append({
@@ -97,7 +114,7 @@ def detect_chapters(text: str) -> List[Dict[str, str]]:
             seen_positions.add(key)
             unique_chapters.append(ch)
     
-    # Extract content between chapters
+    # Extract content between chapters (no character limit)
     for i, chapter in enumerate(unique_chapters):
         start = chapter["position"]
         end = unique_chapters[i + 1]["position"] if i + 1 < len(unique_chapters) else len(text)
@@ -105,7 +122,7 @@ def detect_chapters(text: str) -> List[Dict[str, str]]:
         
         chapters.append({
             "title": chapter["title"],
-            "content": content[:5000]  # Limit content length
+            "content": content  # Full content, no limit
         })
     
     return chapters
