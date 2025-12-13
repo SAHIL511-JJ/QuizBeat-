@@ -4,6 +4,7 @@ import { GameProvider } from './contexts/GameContext';
 import { ThemeProvider } from './contexts/ThemeContext';
 import ProtectedRoute from './components/Auth/ProtectedRoute';
 import Navbar from './components/UI/Navbar';
+import ChatBot from './components/ChatBot/ChatBot';
 
 // Pages
 import Login from './pages/Login';
@@ -75,6 +76,7 @@ function App() {
                   <Route path="/" element={<Navigate to="/dashboard" replace />} />
                 </Routes>
               </main>
+              <ChatBot />
             </div>
           </GameProvider>
         </AuthProvider>

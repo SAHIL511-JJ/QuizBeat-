@@ -46,9 +46,13 @@ async def upload_document(file: UploadFile = File(...)):
         else:  # txt
             with open(temp_path, "r", encoding="utf-8") as f:
                 text = f.read()
+            from app.utils.pdf_parser import detect_chapters
+            chapters = detect_chapters(text)
+            if not chapters:
+                chapters = [{"title": "Full Document", "content": text}]
             result = {
                 "text": text,
-                "chapters": [{"title": "Full Document", "content": text}]
+                "chapters": chapters
             }
         
         return {
