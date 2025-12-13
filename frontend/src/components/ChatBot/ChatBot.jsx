@@ -5,7 +5,6 @@ import './ChatBot.css';
 const faqData = [
     {
         category: "Getting Started",
-        icon: "🚀",
         questions: [
             {
                 q: "What is QuizBeat?",
@@ -19,7 +18,6 @@ const faqData = [
     },
     {
         category: "Uploading Content",
-        icon: "📤",
         questions: [
             {
                 q: "How do I upload a textbook?",
@@ -37,7 +35,6 @@ const faqData = [
     },
     {
         category: "Quiz Generation",
-        icon: "🧠",
         questions: [
             {
                 q: "How do I generate a quiz from my textbook?",
@@ -59,7 +56,6 @@ const faqData = [
     },
     {
         category: "Hosting Games",
-        icon: "🎮",
         questions: [
             {
                 q: "How do I host a multiplayer game?",
@@ -73,7 +69,6 @@ const faqData = [
     },
     {
         category: "Playing & Scoring",
-        icon: "🏆",
         questions: [
             {
                 q: "How is scoring calculated?",
@@ -87,7 +82,6 @@ const faqData = [
     },
     {
         category: "Settings",
-        icon: "⚙️",
         questions: [
             {
                 q: "How do I switch between light and dark mode?",
@@ -126,7 +120,7 @@ export default function ChatBot() {
                 <div className="chatbot-panel">
                     <div className="chatbot-header">
                         <div className="chatbot-title">
-                            <span className="chatbot-icon">🤖</span>
+                            <MessageCircle size={20} />
                             <span>QuizBeat Help</span>
                         </div>
                         <button className="chatbot-close" onClick={() => setIsOpen(false)}>
@@ -157,7 +151,6 @@ export default function ChatBot() {
                                                 className={`category-header ${expandedCategory === index ? 'expanded' : ''}`}
                                                 onClick={() => toggleCategory(index)}
                                             >
-                                                <span className="category-icon">{category.icon}</span>
                                                 <span className="category-name">{category.category}</span>
                                                 {expandedCategory === index ? (
                                                     <ChevronDown size={18} />
