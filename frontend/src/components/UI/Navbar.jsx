@@ -1,5 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
+import { useTheme } from '../../contexts/ThemeContext';
 import {
     BookOpen,
     LogOut,
@@ -8,12 +9,15 @@ import {
     GamepadIcon,
     Trophy,
     Menu,
-    X
+    X,
+    Sun,
+    Moon
 } from 'lucide-react';
 import { useState } from 'react';
 
 export default function Navbar() {
     const { user, logout } = useAuth();
+    const { theme, toggleTheme } = useTheme();
     const navigate = useNavigate();
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -55,6 +59,15 @@ export default function Navbar() {
                         </div>
 
                         <div className="navbar-user">
+                            {/* Theme Toggle Button */}
+                            <button
+                                onClick={toggleTheme}
+                                className="theme-toggle-btn"
+                                title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+                            >
+                                {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+                            </button>
+
                             <div className="user-info">
                                 {user.photoURL ? (
                                     <img src={user.photoURL} alt="Profile" className="user-avatar" />
@@ -82,3 +95,4 @@ export default function Navbar() {
         </nav>
     );
 }
+
