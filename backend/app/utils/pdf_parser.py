@@ -7,11 +7,89 @@ from PyPDF2 import PdfReader
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
+# OCR imports (optional - will fallback gracefully if not available)
+try:
+    from pdf2image import convert_from_path
+    import pytesseract
+    OCR_AVAILABLE = True
+    logger.info("OCR dependencies loaded successfully")
+except ImportError:
+    OCR_AVAILABLE = False
+    logger.warning("OCR dependencies not available - scanned PDFs won't be supported")
+
+
+def ocr_extract_text(file_path: str) -> str:
+    """
+    Extract text from PDF using OCR (for scanned documents).
+    """
+    if not OCR_AVAILABLE:
+        logger.error("OCR not available - pytesseract/pdf2image not installed")
+        return ""
+    
+    logger.info("Starting OCR extraction...")
+    try:
+        # Poppler path for Windows (fallback if not in PATH)
+        import platform
+        import os
+        poppler_path = None
+        if platform.system() == "Windows":
+            # Check common installation paths for Poppler
+            possible_poppler_paths = [
+                r"C:\poppler-25.12.0\Library\bin",
+                r"C:\Program Files\poppler\Library\bin",
+                r"C:\poppler\Library\bin",
+            ]
+            for path in possible_poppler_paths:
+                if os.path.exists(path):
+                    poppler_path = path
+                    logger.info(f"Found Poppler at: {path}")
+                    break
+            
+            # Check common installation paths for Tesseract
+            possible_tesseract_paths = [
+                r"C:\Program Files\Tesseract-OCR\tesseract.exe",
+                r"C:\Tesseract-OCR\tesseract.exe",
+            ]
+            for path in possible_tesseract_paths:
+                if os.path.exists(path):
+                    pytesseract.pytesseract.tesseract_cmd = path
+                    logger.info(f"Found Tesseract at: {path}")
+                    break
+        
+        # Get page count first (load just first page to check)
+        first_page = convert_from_path(file_path, first_page=1, last_page=1, poppler_path=poppler_path)
+        from PyPDF2 import PdfReader
+        reader = PdfReader(file_path)
+        page_count = len(reader.pages)
+        logger.info(f"PDF has {page_count} pages, starting page-by-page OCR...")
+        
+        full_text = ""
+        # Process one page at a time to reduce memory usage
+        for page_num in range(1, page_count + 1):
+            images = convert_from_path(
+                file_path, 
+                first_page=page_num, 
+                last_page=page_num, 
+                poppler_path=poppler_path
+            )
+            if images:
+                page_text = pytesseract.image_to_string(images[0])
+                full_text += page_text + "\n\n"
+                logger.debug(f"OCR Page {page_num}/{page_count}: extracted {len(page_text)} chars")
+            # Image is garbage collected after each iteration
+        
+        logger.info(f"OCR completed: {len(full_text)} total chars")
+        return full_text
+        
+    except Exception as e:
+        logger.error(f"OCR extraction failed: {e}")
+        return ""
+
 
 def extract_text_from_pdf(file_path: str) -> Dict[str, Any]:
     """
     Extract text from a PDF file and detect chapter boundaries.
-    Returns text and detected chapters.
+    Uses PyPDF2 first, falls back to OCR for scanned documents.
     """
     logger.info("=" * 50)
     logger.info(f"PDF EXTRACTION STARTED: {file_path}")
@@ -22,7 +100,7 @@ def extract_text_from_pdf(file_path: str) -> Dict[str, Any]:
     
     logger.info(f"PDF has {len(reader.pages)} pages")
     
-    # Extract text from each page
+    # Extract text from each page using PyPDF2
     for i, page in enumerate(reader.pages):
         text = page.extract_text() or ""
         page_texts.append(text)
@@ -31,7 +109,21 @@ def extract_text_from_pdf(file_path: str) -> Dict[str, Any]:
         if i == 0:
             logger.debug(f"Page 1 preview: {text[:200]}")
     
-    logger.info(f"Total extracted text: {len(full_text)} chars")
+    logger.info(f"PyPDF2 extracted: {len(full_text)} chars")
+    
+    # If PyPDF2 extracted very little text, try OCR
+    if len(full_text.strip()) < 100:
+        logger.info("PyPDF2 extracted minimal text, attempting OCR fallback...")
+        ocr_text = ocr_extract_text(file_path)
+        if len(ocr_text.strip()) > len(full_text.strip()):
+            full_text = ocr_text
+            # Re-split by page markers for chapter detection
+            page_texts = [ocr_text]
+            logger.info("Using OCR extracted text")
+        else:
+            logger.warning("OCR also failed to extract meaningful text")
+    
+    logger.info(f"Final text length: {len(full_text)} chars")
     logger.info(f"Text preview: {full_text[:300]}")
     
     # Detect chapters using common patterns

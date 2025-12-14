@@ -46,7 +46,8 @@ def get_groq_client():
 
 async def generate_quiz(content: str, difficulty: str, num_questions: int) -> List[Dict[str, Any]]:
     """
-    Generate quiz questions using Groq's Llama 70B model.
+    Generate quiz questions using Groq's Llama model.
+    Splits large content into chunks for better coverage.
     """
     logger.info("generate_quiz() called")
     logger.info(f"Content length: {len(content)}, Difficulty: {difficulty}, Num: {num_questions}")
@@ -57,6 +58,83 @@ async def generate_quiz(content: str, difficulty: str, num_questions: int) -> Li
     except Exception as e:
         logger.error(f"Failed to get Groq client: {e}")
         raise
+    
+    # Split content into chunks (15k for fewer API calls)
+    CHUNK_SIZE = 15000
+    chunks = split_into_chunks(content, CHUNK_SIZE)
+    logger.info(f"Split content into {len(chunks)} chunks")
+    
+    # Distribute questions across chunks
+    questions_per_chunk = distribute_questions(num_questions, len(chunks))
+    logger.info(f"Questions distribution: {questions_per_chunk}")
+    
+    # Generate questions from each chunk
+    all_questions = []
+    for i, chunk in enumerate(chunks):
+        if questions_per_chunk[i] == 0:
+            continue
+        
+        logger.info(f"Processing chunk {i+1}/{len(chunks)}, generating {questions_per_chunk[i]} questions")
+        questions = await generate_from_chunk(groq, chunk, difficulty, questions_per_chunk[i])
+        all_questions.extend(questions)
+        logger.info(f"Got {len(questions)} questions from chunk {i+1}")
+        
+        # Add delay between API calls to avoid rate limiting
+        if i < len(chunks) - 1:
+            import asyncio
+            await asyncio.sleep(2)
+    
+    logger.info(f"Total questions generated: {len(all_questions)}")
+    return all_questions
+
+
+def split_into_chunks(content: str, chunk_size: int) -> List[str]:
+    """Split content into chunks of approximately chunk_size characters."""
+    if len(content) <= chunk_size:
+        return [content]
+    
+    chunks = []
+    words = content.split()
+    current_chunk = ""
+    
+    for word in words:
+        if len(current_chunk) + len(word) + 1 <= chunk_size:
+            current_chunk += " " + word if current_chunk else word
+        else:
+            if current_chunk:
+                chunks.append(current_chunk)
+            current_chunk = word
+    
+    if current_chunk:
+        chunks.append(current_chunk)
+    
+    return chunks
+
+
+def distribute_questions(total_questions: int, num_chunks: int) -> List[int]:
+    """Distribute questions evenly across chunks."""
+    if num_chunks == 0:
+        return []
+    if num_chunks == 1:
+        return [total_questions]
+    
+    # Base questions per chunk
+    base = total_questions // num_chunks
+    remainder = total_questions % num_chunks
+    
+    # Distribute: first 'remainder' chunks get one extra question
+    distribution = []
+    for i in range(num_chunks):
+        if i < remainder:
+            distribution.append(base + 1)
+        else:
+            distribution.append(base)
+    
+    return distribution
+
+
+async def generate_from_chunk(groq, content: str, difficulty: str, num_questions: int) -> List[Dict[str, Any]]:
+    """Generate questions from a single content chunk."""
     
     difficulty_instructions = {
         "easy": "Create simple, straightforward questions that test basic understanding. Options should be clearly distinct.",
@@ -70,7 +148,7 @@ DIFFICULTY LEVEL: {difficulty.upper()}
 {difficulty_instructions[difficulty]}
 
 CONTENT:
-{content[:8000]}
+{content}
 
 INSTRUCTIONS:
 1. Each question should have exactly 4 options (A, B, C, D)
@@ -93,58 +171,43 @@ The "correct" field should be the index (0-3) of the correct answer.
 
 Generate the quiz now:"""
 
-    logger.info(f"Prompt created, length: {len(prompt)}")
-    logger.info("Calling Groq API...")
-    
     try:
         response = groq.chat.completions.create(
-            model="llama-3.1-8b-instant",  # Using smaller, faster model
+            model="llama-3.1-8b-instant",
             messages=[{"role": "user", "content": prompt}],
             temperature=0.7,
             max_tokens=4000
         )
         
-        logger.info("Groq API call successful!")
         response_text = response.choices[0].message.content
-        logger.info(f"Response length: {len(response_text)}")
-        logger.debug(f"Response preview: {response_text[:500]}...")
         
         # Extract JSON from response
         json_match = re.search(r'\[[\s\S]*\]', response_text)
         if json_match:
-            logger.info("JSON pattern found in response")
             questions = json.loads(json_match.group())
-            logger.info(f"Parsed {len(questions)} questions from response")
             
-            # Validate and clean questions
-            validated_questions = []
-            for i, q in enumerate(questions[:num_questions]):
+            # Validate questions
+            validated = []
+            for q in questions[:num_questions]:
                 if ("question" in q and "options" in q and "correct" in q 
                     and len(q["options"]) == 4 and 0 <= q["correct"] <= 3):
-                    validated_questions.append({
+                    validated.append({
                         "question": q["question"],
                         "options": q["options"],
                         "correct": q["correct"]
                     })
-                    logger.debug(f"Question {i+1} validated OK")
-                else:
-                    logger.warning(f"Question {i+1} failed validation: {q}")
             
-            logger.info(f"Returning {len(validated_questions)} validated questions")
-            return validated_questions
+            return validated
         else:
-            logger.error("Could not find JSON array in response!")
-            logger.error(f"Full response: {response_text}")
-            raise ValueError("Could not parse quiz response from AI")
+            logger.error("Could not find JSON in response")
+            return []
             
     except json.JSONDecodeError as e:
         logger.error(f"JSON parse error: {e}")
-        raise ValueError(f"Invalid JSON in AI response: {str(e)}")
+        return []
     except Exception as e:
-        logger.error(f"Groq API call failed: {type(e).__name__}: {e}")
-        import traceback
-        logger.error(f"Traceback:\n{traceback.format_exc()}")
-        raise
+        logger.error(f"Chunk generation failed: {e}")
+        return []
 
 
 async def generate_explanation(question: str, user_answer: str, correct_answer: str) -> str:
