@@ -1,4 +1,4 @@
-# StudyQuiz - AI-Powered Quiz Platform
+# QuizBeat - AI-Powered Quiz Platform
 
 A comprehensive web application for students to upload textbooks, generate AI quizzes, and participate in Kahoot-like multiplayer quiz competitions.
 
