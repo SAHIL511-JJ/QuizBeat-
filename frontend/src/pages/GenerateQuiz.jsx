@@ -158,25 +158,26 @@ export default function GenerateQuiz() {
 
                 {generatedQuiz ? (
                     <div className="generated-quiz-result">
-                        <div className="result-card">
-                            <div className="result-header">
-                                <CheckCircle size={48} className="success-icon" />
-                                <h2>{generatedQuiz.title}</h2>
-                                <div className="result-stats">
-                                    <span className="badge">{generatedQuiz.questions.length} Questions</span>
-                                    <span className={`badge ${generatedQuiz.difficulty}`}>{generatedQuiz.difficulty}</span>
+                        <div className="quiz-success-card">
+                            <CheckCircle size={64} className="success-icon-large" />
+                            <div className="quiz-preview-info">
+                                <h3>{generatedQuiz.title}</h3>
+                                <div className="preview-details">
+                                    <span>{generatedQuiz.questions.length} Questions</span>
+                                    <span>•</span>
+                                    <span style={{ textTransform: 'capitalize' }}>{generatedQuiz.difficulty}</span>
                                 </div>
                             </div>
 
-                            <div className="result-actions">
-                                <button className="btn-primary" onClick={handleTakeQuiz}>
+                            <div className="quiz-actions-row">
+                                <button className="btn-primary-large" onClick={handleTakeQuiz}>
                                     <Play size={20} />
                                     Take Quiz Now
                                 </button>
 
                                 {isAuthenticated ? (
                                     <button
-                                        className="btn-secondary"
+                                        className="btn-secondary-large"
                                         onClick={handleSaveToProfile}
                                         disabled={saving}
                                     >
@@ -184,13 +185,13 @@ export default function GenerateQuiz() {
                                         {saving ? 'Saving...' : 'Save to Profile'}
                                     </button>
                                 ) : (
-                                    <button className="btn-secondary" onClick={() => navigate('/login')}>
+                                    <button className="btn-secondary-large" onClick={() => navigate('/login')}>
                                         Login to Save
                                     </button>
                                 )}
 
                                 <button
-                                    className="btn-text"
+                                    className="generate-another-btn"
                                     onClick={() => setGeneratedQuiz(null)}
                                 >
                                     Generate Another
