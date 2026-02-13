@@ -85,10 +85,12 @@ export function GameProvider({ children }) {
 
     // Start the game (host only)
     const startGame = async (gamePin) => {
+        const startTime = Date.now();
         await update(ref(realtimeDb, `games/${gamePin}`), {
             status: 'playing',
             currentQuestion: 0,
-            questionStartTime: Date.now()
+            questionStartTime: startTime,
+            [`questionStartTimes/0`]: startTime
         });
     };
 
@@ -105,9 +107,11 @@ export function GameProvider({ children }) {
 
     // Move to next question (host only)
     const nextQuestion = async (gamePin, questionIndex) => {
+        const startTime = Date.now();
         await update(ref(realtimeDb, `games/${gamePin}`), {
             currentQuestion: questionIndex,
-            questionStartTime: Date.now()
+            questionStartTime: startTime,
+            [`questionStartTimes/${questionIndex}`]: startTime
         });
     };
 

@@ -24,11 +24,14 @@ export default function GameResults() {
                         const question = gameData.quiz.questions[parseInt(qIndex)];
                         if (answer.answer === question.correct) {
                             // Calculate score based on time
-                            const responseTime = answer.time - gameData.questionStartTime;
+                            const qStartTime = gameData.questionStartTimes?.[parseInt(qIndex)] || gameData.questionStartTime;
+                            const responseTime = answer.time - qStartTime;
+
                             const maxTime = gameData.quiz.timePerQuestion * 1000;
                             const baseScore = 1000;
-                            const speedBonus = Math.max(0, 500 * (1 - responseTime / maxTime));
-                            totalScore += Math.round(baseScore + speedBonus);
+                            const speedFactor = Math.max(0, Math.min(1, 1 - responseTime / maxTime));
+                            const speedBonus = Math.round(500 * speedFactor);
+                            totalScore += baseScore + speedBonus;
                         }
                     });
 

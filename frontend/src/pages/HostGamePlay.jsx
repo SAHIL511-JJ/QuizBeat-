@@ -68,11 +68,16 @@ export default function HostGamePlay() {
                 const qIdx = parseInt(qIndex);
                 const question = game.quiz.questions[qIdx];
                 if (answer.answer === question.correct) {
-                    const responseTime = answer.time - game.questionStartTime;
+                    // Use specific start time for this question, fallback to current (legacy)
+                    const qStartTime = game.questionStartTimes?.[qIdx] || game.questionStartTime;
+                    const responseTime = answer.time - qStartTime;
+
                     const maxTime = game.quiz.timePerQuestion * 1000;
                     const baseScore = 1000;
-                    const speedBonus = Math.max(0, 500 * (1 - responseTime / maxTime));
-                    const points = Math.round(baseScore + speedBonus);
+                    // Cap speed bonus multiplier between 0 and 1 to prevent inflation
+                    const speedFactor = Math.max(0, Math.min(1, 1 - responseTime / maxTime));
+                    const speedBonus = Math.round(500 * speedFactor);
+                    const points = baseScore + speedBonus;
                     totalScore += points;
 
                     // Track points for current question
