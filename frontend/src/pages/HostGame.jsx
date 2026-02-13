@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useGame } from '../contexts/GameContext';
-import { GamepadIcon, Brain, Loader, Clock, BookOpen, Plus, Trash2, Edit3, Check, X } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
+import { saveQuiz } from '../services/quizService';
+import { GamepadIcon, Brain, Loader, Clock, BookOpen, Plus, Trash2, Edit3, Check, X, Save } from 'lucide-react';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
@@ -15,6 +17,7 @@ const createEmptyQuestion = () => ({
 export default function HostGame() {
     const navigate = useNavigate();
     const { createGame } = useGame();
+    const { user, isAuthenticated } = useAuth();
     const [textbooks, setTextbooks] = useState([]);
     const [selectedTextbook, setSelectedTextbook] = useState(null);
     const [selectedChapters, setSelectedChapters] = useState([]);
@@ -35,6 +38,18 @@ export default function HostGame() {
     useEffect(() => {
         const stored = JSON.parse(localStorage.getItem('textbooks') || '[]');
         setTextbooks(stored);
+
+        // Check if we coming from saved quiz
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('fromSaved') === 'true') {
+            const savedQuiz = JSON.parse(localStorage.getItem('hostQuizData'));
+            if (savedQuiz) {
+                setQuizMode('custom');
+                setGameTitle(savedQuiz.title);
+                setCustomQuestions(savedQuiz.questions);
+                setShowQuizEditor(true);
+            }
+        }
     }, []);
 
     const handleChapterToggle = (title) => {
@@ -157,6 +172,31 @@ export default function HostGame() {
             console.error(err);
         } finally {
             setCreating(false);
+        }
+    };
+
+    const handleSaveCustomQuiz = async () => {
+        if (!validateQuestions()) return;
+
+        if (!isAuthenticated) {
+            setError('You must be logged in to save quizzes.');
+            return;
+        }
+
+        try {
+            await saveQuiz({
+                title: gameTitle || 'Untitled Quiz',
+                questions: customQuestions,
+                difficulty: difficulty,
+                source: 'manual',
+                creatorId: user.uid,
+                creatorName: user.displayName || 'Anonymous'
+            });
+            alert('Quiz saved to your profile!');
+            // Optional: stay here or navigate
+        } catch (err) {
+            console.error(err);
+            setError('Failed to save quiz.');
         }
     };
 
@@ -402,23 +442,48 @@ export default function HostGame() {
 
                 {/* Create Button */}
                 {showQuizEditor && (
-                    <button
-                        className="create-game-btn"
-                        onClick={handleCreateGame}
-                        disabled={creating}
-                    >
-                        {creating ? (
-                            <>
-                                <Loader className="spinner" size={20} />
-                                Creating Game...
-                            </>
-                        ) : (
-                            <>
-                                <GamepadIcon size={20} />
-                                Create Game
-                            </>
+                    <div className="action-buttons">
+                        <button
+                            className="create-game-btn"
+                            onClick={handleCreateGame}
+                            disabled={creating}
+                        >
+                            {creating ? (
+                                <>
+                                    <Loader className="spinner" size={20} />
+                                    Creating Game...
+                                </>
+                            ) : (
+                                <>
+                                    <GamepadIcon size={20} />
+                                    Create Game Room
+                                </>
+                            )}
+                        </button>
+
+                        {quizMode === 'custom' && (
+                            <button
+                                className="save-quiz-btn"
+                                onClick={handleSaveCustomQuiz}
+                                style={{
+                                    backgroundColor: '#fff',
+                                    color: '#333',
+                                    border: '1px solid #ddd',
+                                    marginLeft: '10px',
+                                    padding: '12px 24px',
+                                    borderRadius: '8px',
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '8px',
+                                    fontWeight: '600'
+                                }}
+                            >
+                                <Save size={20} />
+                                Save to Profile
+                            </button>
                         )}
-                    </button>
+                    </div>
                 )}
             </div>
         </div>

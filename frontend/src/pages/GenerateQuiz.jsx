@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Brain, BookOpen, Loader, CheckCircle, AlertCircle } from 'lucide-react';
+import { Brain, BookOpen, Loader, CheckCircle, AlertCircle, Save, Play } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
+import { saveQuiz } from '../services/quizService';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
@@ -38,6 +40,48 @@ export default function GenerateQuiz() {
         setSelectedChapters([]);
     };
 
+    // State for generated quiz result
+    const [generatedQuiz, setGeneratedQuiz] = useState(null);
+    const [saving, setSaving] = useState(false);
+    const { user, isAuthenticated } = useAuth();
+
+    const handleTakeQuiz = () => {
+        if (!generatedQuiz) return;
+
+        // Save to local history for taking
+        const quizzes = JSON.parse(localStorage.getItem('quizzes') || '[]');
+        quizzes.push(generatedQuiz);
+        localStorage.setItem('quizzes', JSON.stringify(quizzes));
+        localStorage.setItem('currentQuiz', JSON.stringify(generatedQuiz));
+
+        navigate(`/take-quiz/${generatedQuiz.id}`);
+    };
+
+    const handleSaveToProfile = async () => {
+        if (!generatedQuiz) return;
+        if (!isAuthenticated) {
+            setError('You must be logged in to save quizzes.');
+            return;
+        }
+
+        setSaving(true);
+        try {
+            await saveQuiz({
+                ...generatedQuiz,
+                source: 'ai',
+                creatorId: user.uid,
+                creatorName: user.displayName || 'Anonymous',
+            });
+            alert('Quiz saved to your profile!');
+            navigate('/dashboard');
+        } catch (err) {
+            console.error(err);
+            setError('Failed to save quiz to profile.');
+        } finally {
+            setSaving(false);
+        }
+    };
+
     const handleGenerate = async () => {
         if (!selectedTextbook || selectedChapters.length === 0) {
             setError('Please select a textbook and at least one chapter');
@@ -53,14 +97,6 @@ export default function GenerateQuiz() {
             .map(c => c.content)
             .join('\n\n');
 
-        // DEBUG: Log what we're sending
-        console.log('=== DEBUG: Quiz Generation Request ===');
-        console.log('Selected textbook:', selectedTextbook);
-        console.log('Selected chapters:', selectedChapters);
-        console.log('Content length:', content.length);
-        console.log('Content preview:', content.substring(0, 200));
-        console.log('Full request:', { content, difficulty, num_questions: numQuestions });
-
         try {
             const response = await fetch(`${API_URL}/api/quiz/generate`, {
                 method: 'POST',
@@ -74,20 +110,18 @@ export default function GenerateQuiz() {
                 }),
             });
 
-            console.log('Response status:', response.status);
-            const responseText = await response.text();
-            console.log('Response body:', responseText);
-
             if (!response.ok) {
-                throw new Error(`Failed to generate quiz: ${responseText}`);
+                const text = await response.text();
+                throw new Error(`Failed to generate quiz: ${text}`);
             }
 
-            const quiz = JSON.parse(responseText);
+            const quiz = await response.json();
 
-            // Store quiz for taking
+            // Create standard quiz object
             const quizId = Date.now().toString();
             const quizData = {
                 id: quizId,
+                title: `${selectedTextbook.filename} - ${selectedChapters.length} Chapters`,
                 questions: quiz.questions,
                 difficulty: quiz.difficulty,
                 textbook: selectedTextbook.filename,
@@ -95,15 +129,13 @@ export default function GenerateQuiz() {
                 createdAt: new Date().toISOString()
             };
 
-            const quizzes = JSON.parse(localStorage.getItem('quizzes') || '[]');
-            quizzes.push(quizData);
-            localStorage.setItem('quizzes', JSON.stringify(quizzes));
-            localStorage.setItem('currentQuiz', JSON.stringify(quizData));
+            setGeneratedQuiz(quizData);
 
-            navigate(`/take-quiz/${quizId}`);
+            // Allow user to see result and decide what to do
+            // setGenerating(false); handled in finally
 
         } catch (err) {
-            setError('Failed to generate quiz. Make sure the backend server is running and your Groq API key is configured.');
+            setError('Failed to generate quiz. Make sure the backend server is running.');
             console.error(err);
         } finally {
             setGenerating(false);
@@ -115,11 +147,58 @@ export default function GenerateQuiz() {
             <div className="generate-container">
                 <h1>
                     <Brain size={32} />
-                    Generate Quiz
+                    {generatedQuiz ? 'Quiz Generated!' : 'Generate Quiz'}
                 </h1>
-                <p>Create an AI-powered quiz from your uploaded textbooks</p>
+                <p>
+                    {generatedQuiz
+                        ? 'Your AI quiz is ready. What would you like to do?'
+                        : 'Create an AI-powered quiz from your uploaded textbooks'
+                    }
+                </p>
 
-                {textbooks.length === 0 ? (
+                {generatedQuiz ? (
+                    <div className="generated-quiz-result">
+                        <div className="result-card">
+                            <div className="result-header">
+                                <CheckCircle size={48} className="success-icon" />
+                                <h2>{generatedQuiz.title}</h2>
+                                <div className="result-stats">
+                                    <span className="badge">{generatedQuiz.questions.length} Questions</span>
+                                    <span className={`badge ${generatedQuiz.difficulty}`}>{generatedQuiz.difficulty}</span>
+                                </div>
+                            </div>
+
+                            <div className="result-actions">
+                                <button className="btn-primary" onClick={handleTakeQuiz}>
+                                    <Play size={20} />
+                                    Take Quiz Now
+                                </button>
+
+                                {isAuthenticated ? (
+                                    <button
+                                        className="btn-secondary"
+                                        onClick={handleSaveToProfile}
+                                        disabled={saving}
+                                    >
+                                        <Save size={20} />
+                                        {saving ? 'Saving...' : 'Save to Profile'}
+                                    </button>
+                                ) : (
+                                    <button className="btn-secondary" onClick={() => navigate('/login')}>
+                                        Login to Save
+                                    </button>
+                                )}
+
+                                <button
+                                    className="btn-text"
+                                    onClick={() => setGeneratedQuiz(null)}
+                                >
+                                    Generate Another
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                ) : textbooks.length === 0 ? (
                     <div className="empty-state">
                         <BookOpen size={64} />
                         <h2>No Textbooks Found</h2>

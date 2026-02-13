@@ -57,6 +57,13 @@ export default function Dashboard() {
             color: 'success'
         },
         {
+            title: 'My Quizzes',
+            description: 'Manage and share your saved quizzes',
+            icon: FileText,
+            link: '/my-quizzes',
+            color: 'info'
+        },
+        {
             title: 'Join Game',
             description: 'Enter a game PIN to join a quiz',
             icon: Sparkles,

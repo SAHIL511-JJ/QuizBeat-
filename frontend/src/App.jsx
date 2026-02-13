@@ -11,6 +11,8 @@ import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import UploadTextbook from './pages/UploadTextbook';
 import GenerateQuiz from './pages/GenerateQuiz';
+import MyQuizzes from './pages/MyQuizzes';
+import SharedQuiz from './pages/SharedQuiz';
 import TakeQuiz from './pages/TakeQuiz';
 import QuizResults from './pages/QuizResults';
 import HostGame from './pages/HostGame';
@@ -39,6 +41,7 @@ function App() {
                   <Route path="/game/:gameId/play" element={<GamePlay />} />
                   <Route path="/game/:gameId/host" element={<HostGamePlay />} />
                   <Route path="/game/:gameId/results" element={<GameResults />} />
+                  <Route path="/quiz/:quizId" element={<SharedQuiz />} />
 
                   {/* Protected Routes */}
                   <Route path="/dashboard" element={
@@ -54,6 +57,11 @@ function App() {
                   <Route path="/generate-quiz" element={
                     <ProtectedRoute>
                       <GenerateQuiz />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/my-quizzes" element={
+                    <ProtectedRoute>
+                      <MyQuizzes />
                     </ProtectedRoute>
                   } />
                   <Route path="/take-quiz/:quizId" element={
