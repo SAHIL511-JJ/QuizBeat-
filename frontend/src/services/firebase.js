@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getAuth, GoogleAuthProvider } from 'firebase/auth';
+import { getAuth, GoogleAuthProvider, setPersistence, browserSessionPersistence } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import { getDatabase } from 'firebase/database';
 
@@ -13,14 +13,14 @@ const firebaseConfig = {
     databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL,
 };
 
-// Debug: Log the API key being used
-console.log('Firebase API Key:', firebaseConfig.apiKey);
+
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
 // Initialize services
 export const auth = getAuth(app);
+setPersistence(auth, browserSessionPersistence);
 export const googleProvider = new GoogleAuthProvider();
 export const db = getFirestore(app);
 export const realtimeDb = getDatabase(app);
