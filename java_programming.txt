@@ -1,0 +1,65 @@
+Chapter 1: Object-Oriented Programming in Java
+
+Java is a class-based, object-oriented programming language. Every Java program must have at least one class. A class is a blueprint for objects. Objects are instances of classes that encapsulate state (fields) and behavior (methods).
+
+The four pillars of OOP in Java are Encapsulation, Inheritance, Polymorphism, and Abstraction. Encapsulation uses access modifiers (private, protected, public, default/package-private) to hide internal state. Inheritance allows a class to extend another class using the 'extends' keyword, enabling code reuse. Java supports single inheritance for classes but allows multiple inheritance through interfaces. Polymorphism manifests in two forms: compile-time (method overloading) and runtime (method overriding). Method overloading requires different parameter lists, while method overriding requires the same method signature in a subclass. The @Override annotation is used to indicate overridden methods. Abstraction is achieved through abstract classes and interfaces. An abstract class cannot be instantiated and may contain abstract methods (without implementation) and concrete methods. Interfaces before Java 8 could only contain abstract methods and constants. Since Java 8, interfaces can have default methods and static methods. Since Java 9, interfaces can have private methods.
+
+The 'super' keyword is used to call the parent class constructor or access parent class methods. Constructor chaining occurs when one constructor calls another using this() or super(). The first statement in a constructor must be either this() or super(), not both. If neither is specified, the compiler implicitly adds super().
+
+Chapter 2: Java Memory Model and Garbage Collection
+
+Java manages memory through the Java Virtual Machine (JVM). The JVM divides memory into several regions: the Heap, the Stack, the Method Area (Metaspace since Java 8), and the Program Counter Register.
+
+The Heap stores all objects and is shared among all threads. The Heap is divided into Young Generation (Eden space + two Survivor spaces) and Old Generation (Tenured). New objects are allocated in Eden space. When Eden fills up, a Minor GC occurs, moving surviving objects to a Survivor space. Objects that survive multiple GC cycles are promoted to the Old Generation. A Major GC (or Full GC) involves the entire heap and is more expensive.
+
+The Stack is thread-specific and stores method call frames, local variables, and partial results. Each stack frame contains local variables, an operand stack, and a reference to the runtime constant pool. Primitive types and object references (not objects themselves) are stored on the stack. StackOverflowError occurs when the stack is full, typically from infinite recursion.
+
+Garbage collection in Java is automatic. The primary GC algorithms include Serial GC, Parallel GC, CMS (Concurrent Mark-Sweep, deprecated in Java 9, removed in Java 14), G1 GC (default since Java 9), ZGC (production-ready in Java 15), and Shenandoah GC. G1 GC divides the heap into equally sized regions and prioritizes regions with the most garbage. ZGC is designed for low-latency applications with pause times under 10ms regardless of heap size.
+
+The finalize() method was deprecated in Java 9 because it is unreliable. Alternatives include try-with-resources (for AutoCloseable), Cleaner API (Java 9+), and PhantomReferences.
+
+Strong references prevent garbage collection. SoftReferences are cleared before an OutOfMemoryError. WeakReferences are cleared at the next GC cycle. PhantomReferences are enqueued after the object is finalized but before memory is reclaimed. WeakHashMap uses WeakReferences for keys.
+
+Chapter 3: Java Concurrency and Multithreading
+
+Java supports multithreading natively. Threads can be created by extending Thread or implementing Runnable. The ExecutorService framework (java.util.concurrent) is preferred for managing thread pools.
+
+Thread states in Java include NEW, RUNNABLE, BLOCKED, WAITING, TIMED_WAITING, and TERMINATED. A thread enters BLOCKED when waiting to acquire a monitor lock. WAITING occurs when calling Object.wait(), Thread.join(), or LockSupport.park() without a timeout.
+
+The 'synchronized' keyword provides mutual exclusion. It can be applied to methods (instance or static) or blocks. An instance synchronized method locks on the object instance (this). A static synchronized method locks on the Class object. Synchronized blocks allow more granular locking.
+
+The 'volatile' keyword ensures visibility of changes across threads but does not provide atomicity. It prevents instruction reordering (establishing a happens-before relationship). For atomic operations, use java.util.concurrent.atomic classes (AtomicInteger, AtomicLong, AtomicReference).
+
+ReentrantLock provides more flexibility than synchronized: it supports fairness, tryLock(), lockInterruptibly(), and Condition objects. ReadWriteLock allows multiple concurrent readers but exclusive writers. StampedLock (Java 8) supports optimistic reads for better performance.
+
+The java.util.concurrent package provides: ConcurrentHashMap (segment-based locking, restructured in Java 8 to use CAS + synchronized on bins), CopyOnWriteArrayList (creates a copy on every modification, ideal for read-heavy workloads), BlockingQueue implementations (ArrayBlockingQueue, LinkedBlockingQueue, PriorityBlockingQueue), CompletableFuture (composable async programming with thenApply, thenCompose, thenCombine, exceptionally).
+
+Deadlock occurs when two or more threads are blocked forever, each waiting for a resource held by the other. Prevention strategies include consistent lock ordering, tryLock with timeout, and avoiding nested locks. Livelock occurs when threads keep changing state in response to each other without making progress. Starvation occurs when a thread is perpetually denied access to resources.
+
+The Fork/Join framework (Java 7) implements work-stealing for recursive task decomposition. It uses ForkJoinPool and RecursiveTask/RecursiveAction. Virtual Threads (Project Loom, Java 21) are lightweight threads managed by the JVM rather than the OS, enabling millions of concurrent threads.
+
+Chapter 4: Java Generics and Type System
+
+Java Generics provide compile-time type safety while allowing code reuse. Type erasure means generic type information is removed at runtime, replaced with Object or the upper bound. This is why you cannot create generic arrays (new T[]) or use instanceof with generic types.
+
+Bounded type parameters restrict the types that can be used: <T extends Number> means T must be a subclass of Number. Multiple bounds are specified as <T extends Comparable<T> & Serializable>. Classes must come before interfaces in the bounds list.
+
+Wildcards represent unknown types. Upper-bounded wildcards (? extends Number) allow reading but not writing (covariance). Lower-bounded wildcards (? super Integer) allow writing but limit reading to Object (contravariance). Unbounded wildcards (?) are read-only for Object type. The PECS principle: Producer Extends, Consumer Super.
+
+Type inference was enhanced in Java 7 with the diamond operator (<>), in Java 8 with target-type inference for lambdas, and in Java 10 with local variable type inference (var). var is only for local variables with initializers, not for method parameters, return types, or fields.
+
+Recursive type bounds like <T extends Comparable<T>> are used for self-referential comparisons. The Enum class uses this pattern: Enum<E extends Enum<E>>. Bridge methods are synthetic methods generated by the compiler to maintain polymorphism after type erasure.
+
+Chapter 5: Java Streams, Lambdas, and Functional Programming
+
+Functional interfaces have exactly one abstract method and can be annotated with @FunctionalInterface. Key built-in functional interfaces: Function<T,R>, Predicate<T>, Consumer<T>, Supplier<T>, BiFunction<T,U,R>, UnaryOperator<T>, BinaryOperator<T>.
+
+Lambda expressions capture effectively final variables from the enclosing scope. They do not create a new scope for 'this'. Method references are shorthand for lambdas: static (ClassName::method), instance on object (instance::method), instance on parameter (ClassName::method), constructor (ClassName::new).
+
+Streams represent a sequence of elements supporting sequential and parallel operations. Streams are lazy (intermediate operations are not executed until a terminal operation is invoked). Intermediate operations include filter, map, flatMap, distinct, sorted, peek, limit, skip. Terminal operations include forEach, collect, reduce, count, min, max, anyMatch, allMatch, noneMatch, findFirst, findAny.
+
+The Collector interface enables mutable reduction. Collectors utility class provides: toList(), toSet(), toMap(), groupingBy(), partitioningBy(), joining(), counting(), summarizingInt/Long/Double(), reducing(). Custom collectors can be created by implementing Collector<T,A,R>.
+
+Parallel streams use the common ForkJoinPool. They can improve performance for CPU-intensive operations on large datasets but may hurt performance for I/O operations or small datasets. The encounter order may not be preserved unless explicitly maintained (forEachOrdered). Avoid shared mutable state in parallel streams. Custom ForkJoinPool can be used to avoid sharing the common pool.
+
+Optional<T> wraps a value that may be null. Key methods: of(), ofNullable(), empty(), isPresent(), isEmpty() (Java 11), ifPresent(), orElse(), orElseGet(), orElseThrow(), map(), flatMap(), filter(), or() (Java 9), stream() (Java 9).

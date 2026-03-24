@@ -1,0 +1,116 @@
+{
+  "status": "success",
+  "document_id": "doc_456c7a21",
+  "source_filename": "java_programming.txt",
+  "difficulty": "medium",
+  "num_questions": 10,
+  "selected_chapters": [
+    "Chapter 1: Object-Oriented Programming in Java",
+    "Chapter 2: Java Memory Model and Garbage Collection",
+    "Chapter 3: Java Concurrency and Multithreading",
+    "Chapter 4: Java Generics and Type System",
+    "Chapter 5: Java Streams, Lambdas, and Functional Programming"
+  ],
+  "questions": [
+    {
+      "question": "What are the four pillars of OOP in Java?",
+      "options": [
+        "Encapsulation, Inheritance, Abstraction",
+        "Encapsulation, Inheritance, Polymorphism",
+        "Encapsulation, Polymorphism, Abstraction",
+        "Encapsulation, Inheritance, Polymorphism, Abstraction"
+      ],
+      "correct": 3
+    },
+    {
+      "question": "What does the @Override annotation indicate in Java?",
+      "options": [
+        "Method overloading",
+        "Method overriding",
+        "Encapsulation",
+        "Inheritance"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "Where are new objects allocated in Java?",
+      "options": [
+        "Stack",
+        "Heap (Young Generation)",
+        "Heap (Old Generation)",
+        "Heap (Tenured)"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "What is the primary GC algorithm used in Java 9?",
+      "options": [
+        "Serial GC",
+        "G1 GC",
+        "CMS",
+        "ZGC"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "What is the purpose of the 'synchronized' keyword in Java?",
+      "options": [
+        "Ensure visibility of changes",
+        "Provide atomicity",
+        "Establish a happens-before relationship",
+        "Prevent instruction reordering"
+      ],
+      "correct": 3
+    },
+    {
+      "question": "What type of lock does a static synchronized method acquire in Java?",
+      "options": [
+        "Instance lock",
+        "Class lock",
+        "Thread lock",
+        "Method lock"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "What does the 'var' keyword in Java represent?",
+      "options": [
+        "Local variable type inference",
+        "Method parameter type inference",
+        "Return type inference",
+        "Field type inference"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "What is the purpose of a bridge method in Java?",
+      "options": [
+        "Maintain polymorphism",
+        "Ensure type safety",
+        "Provide method overloading",
+        "Enable method overriding"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "What type of reference is used for keys in a WeakHashMap?",
+      "options": [
+        "Strong reference",
+        "Soft reference",
+        "Weak reference",
+        "Phantom reference"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "What is the purpose of the Collector interface in Java?",
+      "options": [
+        "Enable parallel processing",
+        "Provide mutable reduction",
+        "Enable concurrent execution",
+        "Facilitate stream operations"
+      ],
+      "correct": 1
+    }
+  ]
+}

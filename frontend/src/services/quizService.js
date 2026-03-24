@@ -5,6 +5,7 @@ import {
     getDoc,
     getDocs,
     deleteDoc,
+    updateDoc,
     query,
     where,
     serverTimestamp
@@ -99,4 +100,25 @@ export async function getQuizById(quizId) {
  */
 export async function deleteQuiz(quizId) {
     await deleteDoc(doc(db, QUIZZES_COLLECTION, quizId));
+}
+
+/**
+ * Update an existing quiz in Firestore
+ */
+export async function updateQuiz(quizId, updates) {
+    const docRef = doc(db, QUIZZES_COLLECTION, quizId);
+    const payload = {
+        ...updates,
+        updatedAt: serverTimestamp(),
+    };
+
+    if (Array.isArray(updates?.questions)) {
+        payload.numQuestions = updates.questions.length;
+    }
+
+    delete payload.createdAt;
+    delete payload.creatorId;
+    delete payload.creatorName;
+
+    await updateDoc(docRef, payload);
 }

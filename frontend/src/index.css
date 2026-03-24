@@ -224,6 +224,25 @@ input {
   color: white;
 }
 
+.mcp-connect-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.5rem 0.85rem;
+  border-radius: var(--radius);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  transition: all 0.2s ease;
+  font-weight: 600;
+}
+
+.mcp-connect-btn:hover {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+}
+
 /* Theme Toggle Button */
 .theme-toggle-btn {
   padding: 0.5rem;
@@ -253,6 +272,193 @@ input {
   padding: 0.5rem;
   background: transparent;
   color: var(--text-primary);
+}
+
+.mcp-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(2, 6, 23, 0.7);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  z-index: 200;
+}
+
+.mcp-modal {
+  width: min(100%, 520px);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: 1.5rem;
+}
+
+.mcp-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.mcp-modal-header h3 {
+  font-size: 1.35rem;
+  margin-bottom: 0.25rem;
+}
+
+.mcp-modal-subtitle {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+.mcp-close-btn {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mcp-close-btn:hover {
+  background: var(--bg-card-hover);
+  color: var(--text-primary);
+}
+
+.mcp-account-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 1rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: rgba(99, 102, 241, 0.08);
+  margin-bottom: 1rem;
+}
+
+.mcp-account-label {
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.mcp-empty-state {
+  padding: 1rem;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+}
+
+.mcp-code-panel {
+  margin-bottom: 1rem;
+}
+
+.mcp-code-box {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1rem;
+  border-radius: var(--radius);
+  background: var(--bg-darker);
+  border: 1px solid var(--border);
+}
+
+.mcp-code-label {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+}
+
+.mcp-code-value {
+  display: block;
+  font-size: 1.5rem;
+  letter-spacing: 0.12em;
+  font-weight: 700;
+  color: var(--text-primary);
+  word-break: break-all;
+}
+
+.mcp-copy-btn,
+.mcp-generate-btn,
+.mcp-secondary-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.8rem 1rem;
+  border-radius: var(--radius);
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.mcp-copy-btn {
+  align-self: flex-start;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+}
+
+.mcp-copy-btn:hover {
+  background: var(--bg-card-hover);
+}
+
+.mcp-code-meta {
+  margin-top: 0.75rem;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.mcp-code-meta p + p {
+  margin-top: 0.3rem;
+}
+
+.mcp-modal-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
+
+.mcp-generate-btn {
+  background: var(--primary);
+  color: white;
+}
+
+.mcp-generate-btn:hover {
+  background: var(--primary-dark);
+}
+
+.mcp-generate-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.mcp-secondary-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+}
+
+.mcp-secondary-btn:hover {
+  background: var(--bg-card-hover);
+}
+
+.spin {
+  animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* ===== LOGIN PAGE ===== */
@@ -4113,6 +4319,17 @@ input {
   width: 40px;
 }
 
+.edit-btn {
+  background: var(--bg-darker);
+  color: var(--text-secondary);
+  width: 40px;
+}
+
+.edit-btn:hover {
+  background: var(--bg-card-hover);
+  color: var(--primary);
+}
+
 .share-btn:hover {
   background: var(--bg-card-hover);
   color: var(--primary);
@@ -4249,5 +4466,9 @@ input {
 
 .generate-another-btn:hover {
   color: var(--text-primary);
+}
+
+.quiz-title-input {
+  width: 100%;
 }
 

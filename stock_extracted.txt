@@ -1,0 +1,125 @@
+Project Synopsis  
+On 
+StockTracker - (Inventory Management System)  
+ 
+   Submitted to  
+Savitribai Phule Pune University  
+ 
+In Partial Fulfillment of the requirement of the award of the degree of  
+Bachelor of Computer Application  
+TYBCA - SCIENCE, Sem VI  
+Academic Year 2024 -25 
+ 
+Submitted by  
+Mr. Shivtej Babruwan Mahatme  
+ 
+Under the Guidance of  
+Dr. Harsha Patil  
+ 
+Department of Computer Application  
+ 
+ 
+Alandi (D), 412105  
+ 
+ 
+
+
+1. Title  
+StockTracker - (Inventory Management System)  
+2. Introduction  
+Inventory management is a critical function for businesses of all sizes. Keeping track of stock 
+levels, monitoring sales, managing suppliers, and generating reports are essential activities 
+that directly impact profitability. Traditional methods —such as pa per-based registers or basic 
+spreadsheets —are prone to human error, inefficiency, and a lack of real -time visibility.  
+StockTracker  is a comprehensive, web -based inventory management system designed to 
+automate the stock management workflow. Built using modern web technologies including 
+HTML5, CSS3, PHP 8.x, and PostgreSQL, the system provides a feature -rich dashboard, 
+product managem ent, and automated invoicing. The significance of this project lies in its 
+practical approach to solving real -world challenges faced by small and medium enterprises 
+(SMEs) by providing a centralized digital platform.  
+3. Objectives  
+• To design and develop a functional web -based inventory system with real -time 
+tracking.  
+• To implement complete CRUD (Create, Read, Update, Delete) operations for 
+products and suppliers.  
+• To develop a sales and invoicing module that supports automated invoice generation.  
+• To build an interactive dashboard with charts and visual analytics for quick decision -
+making.  
+• To create a Point of Sale (POS) interface for fast, counter -level billing operations.  
+• To support CSV import/export for bulk data handling.  
+• To generate automated low -stock alerts and ensure system security using prepared 
+statements.  
+
+4. Scope  
+4.1 Included in Scope  
+• Product Inventory:  Categorization, pricing, and stock level indicators (low, medium, 
+high).  
+• Sales Management:  Multi -item invoicing, discount application, and printable 
+receipts.  
+• Supplier Database:  Full CRUD operations and purchase history tracking.  
+• Dashboard:  KPI metrics and sales charts using Chart.js.  
+• Quick POS Module:  Rapid counter sales interface.  
+• Reporting:  Profit and loss analysis and stock movement tracking.  
+4.2 Excluded from Scope  
+• Multi -branch or warehouse management across different geographical locations.  
+• Integration with third -party payment gateways (e.g., Stripe, PayPal).  
+• Mobile native application development (the system is responsive web -based only).  
+5. Methodology  
+The project follows a modular development methodology combining Agile principles with a 
+classic three -tier web architecture.  
+5.1 Architecture  
+• Frontend (Presentation Tier):  HTML5, CSS3 with Bootstrap 5 for responsive 
+styling.  
+• Backend (Logic Tier):  PHP 8.x utilizing PDO for secure database interaction.  
+• Database (Data Tier):  PostgreSQL for persistent data storage.  
+5.2 Tools and Technologies  
+Component  Technology  
+Frontend Structure  HTML5, CSS3, Bootstrap 5  
+
+Client -Side Logic  JavaScript (ES6+)  
+Backend Language  PHP 8.x  
+Database  PostgreSQL  
+Version Control  Git 
+6. Literature Review  
+Inventory systems have evolved from manual record -keeping to sophisticated cloud -based 
+solutions. Early computerized systems were limited by platform dependency. Today, web 
+technologies allow for real -time tracking and remote access. Research in web -based 
+applications highlights the effectiveness of the MVC (Model -View -Controller) architecture 
+for improving software maintainability (Leff & Rayfield, 2001). This project builds upon 
+these established frameworks to deliver a cost -effective, open -source solutio n tailored for 
+small business use and academic demonstration.  
+ 
+7. Implementation Plan  
+Phase  Tasks  Duration  
+Phase 1: 
+Planning  Requirement analysis and database schema design  Week 1  
+Phase 2: Core 
+Dev Product CRUD and dashboard KPI setup  Week 2 –3 
+Phase 3: Business  Sales, invoicing, and supplier management  Week 4 –5 
+Phase 4: 
+Advanced  POS module, reports, and CSV tools  Week 6 –7 
+Phase 5: Testing  Bug fixing, documentation, and final deployment  Week 8  
+
+8. Expected Outcomes  
+• A fully functional web -based system accessible via any modern browser.  
+• A real -time dashboard displaying key performance indicators and interactive charts.  
+• An automated sales system with printable invoices and transaction history.  
+• Automated low -stock alerts to prevent inventory shortages.  
+• Secure data handling to prevent SQL injection and unauthorized access.  
+9. Conclusion  
+StockTracker addresses the need for an affordable, easy -to-use inventory management 
+system. By leveraging modern technologies like PHP and PostgreSQL, the project 
+demonstrates the practical application of full -stack development in solving business 
+problems . The system covers the entire lifecycle from stock monitoring to financial reporting, 
+making it a valuable tool for small business owners.  
+10. References  
+1. Silberschatz, A., Korth, H. F., & Sudarshan, S., "Database System Concepts", 
+McGraw -Hill Education, 2019.  
+2. Pressman, R. S., "Software Engineering: A Practitioner’s Approach", McGraw -Hill, 
+2014.  
+3. MDN Web Docs, "HTML, CSS, and JavaScript documentation", 
+https://developer.mozilla.org , 2024.  
+4. PHP Group, "PHP: Hypertext Preprocessor Manual", https://www.php.net/docs.php , 
+2024.  
+ 
+

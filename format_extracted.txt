@@ -1,0 +1,110 @@
+Guidelines and Instructions for Synopsis 
+
+
+
+
+Students are instructed to strictly follow guidelines.
+Guidelines –
+1. Project title should be in Times New Roman with font size 18
+2. The entire synopsis should be in Times New Roman font with line spacing 1.5, top, left, bottom and right margins are properly aligned with 1 inch.
+3. All contents should be of size 12 and justified 
+4. All the main topic headings should be of size 16, bold and left justified.
+5. All the sub headings should be of size 14 and bold.
+6. All pages should be of A-4 sized paper.
+
+Instructions-
+1. Only one copy (hard copy) of synopsis has to be made for the submission.
+2. Only printed synopsis is accepted.
+3. References should follow format like (author name, “title of paper or book or link name”, name  
+    of Conference or journals or book in which published, year of published.
+4. Synopsis should be of maximum four (4) pages only.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+A
+Project Synopsis
+
+On
+
+Project Topic Name
+(Size 18, Bold, Times New Roman)
+
+
+   Submitted to
+Savitribai Phule Pune University 
+ (Size 14, Bold, Times New Roman)
+
+
+
+In Partial Fulfillment of the requirement of the award of the degree of
+Bachelor of Computer Application 
+TYBCA - SCIENCE, Sem VI
+Academic Year 2024-25
+
+
+Submitted by
+Mr. / Ms. Student(s) Name
+(Size 14, Bold, Times New Roman)
+
+Under the Guidance of
+Guide Name
+
+
+Department of Computer Application
+
+
+Alandi (D), 412105
+1. Title:
+A concise and descriptive title that reflects the essence of the project.
+2. Introduction:
+Provide a brief overview of the project.
+State the background and context of the problem or opportunity addressed by the project.
+Highlight the significance and relevance of the project in the chosen field.
+3. Objectives:
+Clearly state the specific objectives of the project.
+Outline the goals you aim to achieve by the completion of the project.
+4. Scope:
+Define the boundaries and limitations of the project.
+Specify what is included and excluded from the project scope.
+5. Methodology:
+Describe the methods employed in the project.
+Outline the tools, technologies, and techniques used for data collection and analysis.
+6. Literature Review:
+Summarize relevant literature and research that forms the basis for your project.
+Highlight key theories, models, or research or development frameworks that inform your work.
+7. Implementation Plan:
+Provide a timeline or schedule for the execution of the project.
+Break down the project into phases and tasks.
+8. Expected Outcomes:
+Clearly articulate the anticipated results and deliverables of the project.
+Describe how the project will contribute to existing knowledge or address the identified problem.
+9. Conclusion:
+Summarize the key points discussed in the synopsis.
+Conclude with a statement about the expected contribution of the project.
+10. References:
+Include a list of all references cited in the synopsis.
+
+
+
+
+
+

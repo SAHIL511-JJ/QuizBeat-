@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Brain, BookOpen, Loader, CheckCircle, AlertCircle, Save, Play } from 'lucide-react';
+import { Brain, BookOpen, Loader, CheckCircle, AlertCircle, Save, Play, Edit3 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { saveQuiz } from '../services/quizService';
+import QuizEditor from '../components/Quiz/QuizEditor';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
@@ -43,18 +44,26 @@ export default function GenerateQuiz() {
     // State for generated quiz result
     const [generatedQuiz, setGeneratedQuiz] = useState(null);
     const [saving, setSaving] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
+    const [editableTitle, setEditableTitle] = useState('');
+    const [editableQuestions, setEditableQuestions] = useState([]);
     const { user, isAuthenticated } = useAuth();
 
     const handleTakeQuiz = () => {
         if (!generatedQuiz) return;
+        const quizToTake = {
+            ...generatedQuiz,
+            title: editableTitle || generatedQuiz.title,
+            questions: editableQuestions.length ? editableQuestions : generatedQuiz.questions,
+        };
 
         // Save to local history for taking
         const quizzes = JSON.parse(localStorage.getItem('quizzes') || '[]');
-        quizzes.push(generatedQuiz);
+        quizzes.push(quizToTake);
         localStorage.setItem('quizzes', JSON.stringify(quizzes));
-        localStorage.setItem('currentQuiz', JSON.stringify(generatedQuiz));
+        localStorage.setItem('currentQuiz', JSON.stringify(quizToTake));
 
-        navigate(`/take-quiz/${generatedQuiz.id}`);
+        navigate(`/take-quiz/${quizToTake.id}`);
     };
 
     const handleSaveToProfile = async () => {
@@ -68,6 +77,8 @@ export default function GenerateQuiz() {
         try {
             await saveQuiz({
                 ...generatedQuiz,
+                title: editableTitle || generatedQuiz.title,
+                questions: editableQuestions.length ? editableQuestions : generatedQuiz.questions,
                 source: 'ai',
                 creatorId: user.uid,
                 creatorName: user.displayName || 'Anonymous',
@@ -130,6 +141,9 @@ export default function GenerateQuiz() {
             };
 
             setGeneratedQuiz(quizData);
+            setEditableTitle(quizData.title);
+            setEditableQuestions(quizData.questions);
+            setIsEditing(false);
 
             // Allow user to see result and decide what to do
             // setGenerating(false); handled in finally
@@ -175,6 +189,14 @@ export default function GenerateQuiz() {
                                     Take Quiz Now
                                 </button>
 
+                                <button
+                                    className="btn-secondary-large"
+                                    onClick={() => setIsEditing((prev) => !prev)}
+                                >
+                                    <Edit3 size={20} />
+                                    {isEditing ? 'Hide Editor' : 'Edit Quiz'}
+                                </button>
+
                                 {isAuthenticated ? (
                                     <button
                                         className="btn-secondary-large"
@@ -192,12 +214,28 @@ export default function GenerateQuiz() {
 
                                 <button
                                     className="generate-another-btn"
-                                    onClick={() => setGeneratedQuiz(null)}
+                                    onClick={() => {
+                                        setGeneratedQuiz(null);
+                                        setIsEditing(false);
+                                        setEditableTitle('');
+                                        setEditableQuestions([]);
+                                    }}
                                 >
                                     Generate Another
                                 </button>
                             </div>
                         </div>
+
+                        {isEditing && (
+                            <QuizEditor
+                                title={editableTitle}
+                                onTitleChange={setEditableTitle}
+                                questions={editableQuestions}
+                                onQuestionsChange={setEditableQuestions}
+                                error={error}
+                                onError={setError}
+                            />
+                        )}
                     </div>
                 ) : textbooks.length === 0 ? (
                     <div className="empty-state">

@@ -12,6 +12,7 @@ import Dashboard from './pages/Dashboard';
 import UploadTextbook from './pages/UploadTextbook';
 import GenerateQuiz from './pages/GenerateQuiz';
 import MyQuizzes from './pages/MyQuizzes';
+import EditQuiz from './pages/EditQuiz';
 import SharedQuiz from './pages/SharedQuiz';
 import TakeQuiz from './pages/TakeQuiz';
 import QuizResults from './pages/QuizResults';
@@ -62,6 +63,11 @@ function App() {
                   <Route path="/my-quizzes" element={
                     <ProtectedRoute>
                       <MyQuizzes />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/my-quizzes/:quizId/edit" element={
+                    <ProtectedRoute>
+                      <EditQuiz />
                     </ProtectedRoute>
                   } />
                   <Route path="/take-quiz/:quizId" element={

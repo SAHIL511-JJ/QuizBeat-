@@ -1,0 +1,27 @@
+SWOT Analysis: QuizBeat
+
+Here's an honest breakdown of where the project stands right now.
+
+Strengths (Internal)
+- Massive Time Saver: The core feature of uploading a PDF/textbook and getting a quiz instantly is the biggest win. Nobody wants to manually type out 50 questions. It solves a real problem for students who are crammed for time.
+- Engagement Factor: The multiplayer mode (Kahoot-style) actually makes studying less boring. It turns a chore into a competition, which is surprisingly effective for retention.
+- Instant Feedback: Unlike basic flashcards, the AI provides explanations for why an answer is right or wrong immediately. This reinforcement loop is huge for learning.
+- Modern Tech Stack: Built on React and Vite, so the frontend is snappy and responsive. It doesn't feel like a clunky old school project.
+- Scalable Backend: Using FastAPI for the heavy lifting (AI processing) keeps the logic separate from the frontend, making it easier to manage as the code grows.
+
+Weaknesses (Internal)
+- AI Reliability: The Llama 70B model is great, but it sometimes hallucinates or generates weird questions if the source PDF has complex formatting or diagrams. It requires a "human in the loop" to verify accuracy sometimes.
+- Dependency on Connectivity: The whole app is dead in the water without a solid internet connection. Firebase and the AI API need constant access, so no offline mode is possible right now.
+- API Costs: While free tiers exist, scaling this up would get expensive fast. We're relying on external services (Groq, Firebase) that could become a bottleneck if user count spikes.
+- Complexity for a Solo/Small Team: Managing two separate backends (Python/FastAPI and Node/Firebase) adds mental overhead. Debugging cross-origin issues or auth syncs can be a pain.
+
+Opportunities (External)
+- Mobile Experience: Converting this to a PWA or a native React Native app would be a huge opportunity. Most students study on their phones, not just laptops.
+- Teacher Analytics Dashboard: Right now it's student-focused, but adding a "Teacher View" that tracks class performance and identifies weak spots could make this viable for actual classrooms, not just study groups.
+- Multimedia Support: Expanding the AI to read diagrams or images (OCR) from textbooks would put this miles ahead of basic text-scrapers.
+- Freemium Model: Proof of concept for a business model—basic quizzes are free, but "Deep Analysis" or unlimited PDF uploads could be paid features.
+
+Threats (External)
+- The Giants: Kahoot, Quizlet, and Anki are massive. They have years of head start. We have to lean hard into the "AI Generation" niche to stand out because we can't beat them on polish yet.
+- Platform Dependency: If Groq changes their API pricing or Firebase deprecates a feature we use, we’re forced to rewrite huge chunks of the backend. We are at the mercy of our providers.
+- Cheating/Exploits: As with any competitive game, students will try to hack the leaderboard or use scripts. Keeping the game integrity secure is a constant arms race.

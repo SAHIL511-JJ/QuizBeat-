@@ -8,6 +8,12 @@ services:
     envVars:
       - key: GROQ_API_KEY
         sync: false
+      - key: FIREBASE_CREDENTIALS
+        sync: false
+      - key: MCP_LOGIN_CODE_TTL_MINUTES
+        value: 10
+      - key: MCP_SESSION_TTL_DAYS
+        value: 7
       - key: FRONTEND_URL
         sync: false
       - key: PYTHON_VERSION

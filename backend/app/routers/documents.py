@@ -59,7 +59,8 @@ async def upload_document(file: UploadFile = File(...)):
             "filename": file.filename,
             "total_chars": len(result["text"]),
             "chapters": result["chapters"],
-            "full_text": result["text"][:1000] + "..." if len(result["text"]) > 1000 else result["text"]
+            "full_text": result["text"][:1000] + "..." if len(result["text"]) > 1000 else result["text"],
+            "text": result["text"]
         }
         
     except Exception as e:

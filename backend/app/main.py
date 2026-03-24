@@ -21,10 +21,12 @@ app.add_middleware(
 )
 
 # Import routers
-from app.routers import documents, quiz
+from app.routers import documents, mcp_auth, mcp_quizzes, quiz
 
 app.include_router(documents.router, prefix="/api", tags=["Documents"])
 app.include_router(quiz.router, prefix="/api", tags=["Quiz"])
+app.include_router(mcp_auth.router, prefix="/api", tags=["MCP Auth"])
+app.include_router(mcp_quizzes.router, prefix="/api", tags=["MCP Quizzes"])
 
 @app.get("/")
 async def root():

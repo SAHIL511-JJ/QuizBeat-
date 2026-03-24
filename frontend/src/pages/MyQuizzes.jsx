@@ -11,7 +11,8 @@ import {
     Clock,
     BookOpen,
     Loader,
-    Plus
+    Plus,
+    Edit3
 } from 'lucide-react';
 
 export default function MyQuizzes() {
@@ -67,6 +68,10 @@ export default function MyQuizzes() {
         navigator.clipboard.writeText(url).then(() => {
             alert('Quiz link copied to clipboard!');
         });
+    };
+
+    const handleEdit = (quizId) => {
+        navigate(`/my-quizzes/${quizId}/edit`);
     };
 
     if (loading) {
@@ -138,6 +143,13 @@ export default function MyQuizzes() {
                                 >
                                     <GamepadIcon size={18} />
                                     Host
+                                </button>
+                                <button
+                                    className="action-btn edit-btn"
+                                    onClick={() => handleEdit(quiz.id)}
+                                    title="Edit Quiz"
+                                >
+                                    <Edit3 size={18} />
                                 </button>
                                 <button
                                     className="action-btn share-btn"
