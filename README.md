@@ -1,121 +1,81 @@
-# QuizBeat - AI-Powered Quiz Platform
+# ⚡ QuizBeat — AI-Native Quiz Platform
 
-A comprehensive web application for students to upload textbooks, generate AI quizzes, and participate in Kahoot-like multiplayer quiz competitions.
+> *Turn any textbook into a live multiplayer quiz in seconds — powered by LLMs, built AI-first.*
 
-## 🚀 Features
+[![React](https://img.shields.io/badge/Frontend-React%20%2B%20Vite-61dafb?logo=react)](https://react.dev)
+[![FastAPI](https://img.shields.io/badge/Backend-FastAPI-009688?logo=fastapi)](https://fastapi.tiangolo.com)
+[![Groq](https://img.shields.io/badge/AI-Groq%20%7C%20Llama%2070B-ff6b35)](https://groq.com)
+[![Firebase](https://img.shields.io/badge/Auth%20%26%20DB-Firebase-FFCA28?logo=firebase)](https://firebase.google.com)
 
-- **📚 Textbook Upload**: Upload PDF, Word, or text files
-- **🧠 AI Quiz Generation**: Generate quizzes using Groq's Llama 70B model
-- **📊 Difficulty Levels**: Easy, Medium, Hard
-- **📖 Chapter Selection**: Narrow down quiz scope to specific chapters
-- **✅ Results & Explanations**: View answers with AI-generated explanations
-- **🔐 Google Sign-In**: Secure authentication
-- **🎮 Kahoot-like Multiplayer**: Real-time team competitions with scoring
+---
+
+## 🤖 AI at the Core
+
+QuizBeat is not just AI-assisted — it is **AI-native**. Every key user flow is driven by intelligence:
+
+| Feature | How AI Powers It |
+|---|---|
+| **Instant Quiz Generation** | Upload any PDF/DOCX/TXT → Groq's Llama 70B extracts concepts and generates MCQs with distractors |
+| **Smart Difficulty Scaling** | Choose Easy / Medium / Hard — the LLM adjusts question complexity accordingly |
+| **Chapter-Aware Context** | Specify chapters; the AI narrows scope and stays contextually relevant |
+| **Explanation Engine** | Every answer comes with an AI-generated explanation — not just a correct/wrong label |
+| **MCP Auth Layer** | Custom **Model Context Protocol (MCP)** server handles AI-aware authentication flows |
+| **Adaptive Quiz Editing** | Edit & regenerate individual questions from the AI output without re-uploading |
+
+---
+
+## 🎮 Platform Features
+
+- **Real-time Multiplayer** — Host Kahoot-style competitions with live leaderboards via Firebase Realtime DB
+- **Quiz Sharing** — Share quizzes via public links; anyone can take without an account
+- **Google Sign-In** — Zero-friction onboarding with Firebase Auth
+- **Personal Quiz Library** — Save, manage, and reuse all generated quizzes from your dashboard
+- **Full Game Flow** — Lobby → Gameplay → Live scoring → Results — all synchronized in real-time
+- **Deployed & Production-Ready** — Vercel (frontend) + Render (backend) with Docker support
+
+---
 
 ## 🛠️ Tech Stack
 
-- **Frontend**: React + Vite
-- **Backend**: FastAPI (Python)
-- **Database/Auth**: Firebase
-- **AI**: Groq API (Llama 70B)
-- **Deployment**: Vercel (frontend) + Render (backend)
-
-## 📋 Prerequisites
-
-- Node.js 18+
-- Python 3.9+
-- Firebase account
-- Groq API key
-
-## 🔧 Setup
-
-### 1. Firebase Setup
-
-1. Go to [Firebase Console](https://console.firebase.google.com/)
-2. Create a new project named "studyquiz"
-3. Enable **Google Authentication**
-4. Create **Firestore Database** (test mode)
-5. Create **Realtime Database** (test mode)
-6. Get your config from Project Settings > Your Apps > Web
-
-### 2. Frontend Setup
-
-```bash
-cd frontend
-cp .env.example .env
-# Edit .env with your Firebase config
-npm install
-npm run dev
+```
+Frontend  → React + Vite
+Backend   → FastAPI (Python)
+AI Engine → Groq API  (Llama-3 70B)
+Auth/DB   → Firebase (Auth + Firestore + Realtime DB)
+Protocol  → Custom MCP Server for AI context management
+Deploy    → Vercel + Render + Docker
 ```
 
-### 3. Backend Setup
+---
+
+## 🤝 Built With AI-Native Dev Tools
+
+This project was developed using a fully AI-assisted workflow:
+
+- **[Antigravity](https://antigravity.dev)** — Agentic coding assistant for architecture, multi-file edits & planning
+- **[Claude Code](https://claude.ai/code)** — Feature implementation, debugging & code review
+- **[OpenAI Codex](https://openai.com/codex)** — Boilerplate generation & rapid prototyping
+
+> The entire development cycle — from schema design to deployment config — was orchestrated with these AI tools, making this a true **AI-native engineering project**.
+
+---
+
+## 🚀 Quick Start
 
 ```bash
+# Frontend
+cd frontend && npm install && npm run dev
+
+# Backend
 cd backend
-python -m venv venv
-venv\Scripts\activate  # Windows
-# source venv/bin/activate  # Mac/Linux
+python -m venv venv && venv\Scripts\activate
 pip install -r requirements.txt
-cp .env.example .env
-# Edit .env with your Groq API key
 uvicorn app.main:app --reload
 ```
 
-## 🌐 Environment Variables
+> Requires: Node 18+, Python 3.9+, Firebase project, Groq API key. See `.env.example` files in each directory.
 
-### Frontend (.env)
-```
-VITE_FIREBASE_API_KEY=your_api_key
-VITE_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
-VITE_FIREBASE_PROJECT_ID=your_project_id
-VITE_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
-VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
-VITE_FIREBASE_APP_ID=your_app_id
-VITE_FIREBASE_DATABASE_URL=https://your_project.firebaseio.com
-VITE_API_URL=http://localhost:8000
-```
-
-### Backend (.env)
-```
-GROQ_API_KEY=your_groq_api_key
-FRONTEND_URL=http://localhost:5173
-```
-
-## 🚀 Deployment
-
-### Frontend (Vercel)
-```bash
-cd frontend
-npm run build
-npx vercel --prod
-```
-
-### Backend (Render)
-1. Push to GitHub
-2. Connect repo to Render
-3. Set environment variables
-4. Deploy
-
-## 📁 Project Structure
-
-```
-├── frontend/          # React app
-│   ├── src/
-│   │   ├── components/
-│   │   ├── contexts/
-│   │   ├── pages/
-│   │   └── services/
-│   └── package.json
-│
-├── backend/           # FastAPI app
-│   ├── app/
-│   │   ├── routers/
-│   │   ├── services/
-│   │   └── utils/
-│   └── requirements.txt
-│
-└── README.md
-```
+---
 
 ## 📝 License
 
